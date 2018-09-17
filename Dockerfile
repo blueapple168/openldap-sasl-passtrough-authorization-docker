@@ -32,7 +32,7 @@ RUN sed -i 's/MECHANISMS="pam"/MECHANISMS="ldap"/' /etc/default/saslauthd \
   && echo "pwcheck_method: saslauthd" >> /usr/lib/sasl2/slapd.conf \
   && echo "saslauthd_path: /var/run/saslauthd/mux" >> /usr/lib/sasl2/slapd.conf
 
-COPY saslauthd.conf /etc/saslauthd.conf
+COPY conf/saslauthd.conf /etc/saslauthd.conf
 
 RUN sed -i 's|ldap:\/\/ad.example.com:389\/|'"$LDAP_SERVERS"'|' /etc/saslauthd.conf \
   && sed -i 's/CN=DomainUsers,DC=example,DC=com/'"$LDAP_SEARCH_BASE"'/' /etc/saslauthd.conf \
@@ -58,13 +58,13 @@ RUN ./configure --enable-spasswd --with-cyrus-sasl --enable-memberof \
 RUN touch /usr/local/etc/openldap/create.ldif \
   cp /usr/local/var/openldap-data/DB_CONFIG.example /usr/local/var/openldap-data/DB_CONFIG
 
-COPY slapd.conf /usr/local/etc/openldap/slapd.conf
+COPY conf/slapd.conf /usr/local/etc/openldap/slapd.conf
 RUN sed -i 's/suffix\s\+"dc=my-domain,dc=com"/suffix          \"'"$LDAP_DN_BASE"'\"/' /usr/local/etc/openldap/slapd.conf \
   && sed -i 's/cn=Manager,dc=my-domain,dc=com/'"$LDAP_ROOT_DN"'/' /usr/local/etc/openldap/slapd.conf \
   && sed -i 's/database\s\+mdb/database        '"$LDAP_DATABASE"'/' /usr/local/etc/openldap/slapd.conf \
   && sed -i 's/rootpw\s\+secret/rootpw          '"$LDAP_ROOT_PW"'/' /usr/local/etc/openldap/slapd.conf
 
-COPY create.ldif /usr/local/etc/openldap/create.ldif
+COPY conf/create.ldif /usr/local/etc/openldap/create.ldif
 
 RUN sed -i 's/dn: dc=my-domain,dc=com/dn: '"$LDAP_DN_BASE"'/' /usr/local/etc/openldap/create.ldif \
   && sed -i 's/o: Example/o: '"$LDAP_ORGANIZATION"'/' /usr/local/etc/openldap/create.ldif
