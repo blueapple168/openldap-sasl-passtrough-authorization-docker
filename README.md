@@ -1,0 +1,1 @@
+# openldap-sasl-passtrough-authorization-docker
