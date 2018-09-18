@@ -73,7 +73,7 @@ RUN slapadd -l /usr/local/etc/openldap/create.ldif
 
 WORKDIR /
 
-EXPOSE 389
+EXPOSE 389 636
 
 VOLUME ["/usr/local/etc/openldap", "/usr/local/var/openldap-data"]
 
